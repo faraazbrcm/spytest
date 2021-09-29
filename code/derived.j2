@@ -1,0 +1,23 @@
+from apis.yang.codegen.{{ mod }} import {{ class_name_dict[cls]["name"] }}
+
+class {{ class_name_dict[cls]["name"] }}({{ class_name_dict[cls]["name"] }}Base):
+    def __init__(self, {% for attr in class_dict[cls]["attrs"] %} {{ class_dict[cls]["attr_name_dict"][attr]["name"] }}{% if not loop.last %},{% endif %}{% endfor %}{% if class_dict[cls]["parent"] != None %}, {{ class_name_dict[class_dict[cls]["parent"]]["name"] }}{% endif %}):
+        super(Acl, self).__init__(configCounterCapability, stateCounterCapability)
+
+    def configure_klish(self, dut, target_attr=None, operation="update", success=True, ignore_error=False, **kwargs):
+        ''' Developers will implement this '''
+        print("I am Klish Configure")
+        status = True
+        return status
+
+    def unConfigure_klish(self, dut, target=None, success=True, ignore_error=False, **kwargs):
+        ''' Developers will implement this '''
+        print("I am Klish unConfigure")
+        status = True
+        return status
+
+    def verify_klish(self, dut, target=None, success=True, ignore_error=False, **kwargs):
+        ''' Users required to write code for klish '''
+        status = True
+        return status
+

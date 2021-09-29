@@ -1,0 +1,175 @@
+##############################################################
+##############################################################
+##### THIS IS AN AUTO-GENERATED FILE PLEASE DO NOT EDIT ######
+##############################################################
+##############################################################
+
+from apis.yang.codegen.base import Base
+from collections import OrderedDict
+{% if class_dict[cls]["parent"] == None %}
+from apis.yang.codegen.bindings import {{ class_dict[cls]["module_name_safe"] }}
+{% else %}
+from apis.yang.codegen.bindings.{% for elem in class_name_dict[cls]["elements_safe"][:-1] %}{{ elem }}{% if not loop.last %}.{% endif %}{% endfor %} import {{ class_name_dict[cls]["elements_safe"][-2] }}
+{% endif %}
+
+class {{ class_name_dict[cls]["name"] }}Base(Base):
+    """
+    {{ class_dict[cls]["description"] }}
+    """
+    def __init__(self, {% for attr in class_dict[cls]["attrs"] %} {{ class_dict[cls]["attr_name_dict"][attr]["name"] }}{% if not loop.last %},{% endif %}{% endfor %}{% if class_dict[cls]["parent"] != None %}, {{ class_name_dict[class_dict[cls]["parent"]]["name"] }}{% endif %}):
+        super({{ class_name_dict[cls]["name"] }}Base, self).__init__()
+        
+        # Corresponding YANG Path
+        self.__yang_path = "{{ class_dict[cls]["yang_path"] }}"
+        
+        # Corresponding YANG Path in RESTCONF format
+        self.__yang_path_rest = "{{ class_dict[cls]["rest_path"] }}"
+        self.__yang_path_rest_dict = OrderedDict()
+        
+        # Corresponding YANG Path in GNMI format
+        self.__yang_path_gnmi = "{{ class_dict[cls]["gnmi_path"] }}"
+        self.__yang_path_gnmi_dict = OrderedDict()
+
+        {% if class_dict[cls]["attrs"]|length > 0 %}
+        # Invokes setter for leafs/leaf-lists
+        {% endif %}
+        {% for attr in class_dict[cls]["attrs"] %}
+
+        # {{ class_dict[cls]["attr_name_dict"][attr]["name"] }}
+        self.{{ class_dict[cls]["attr_name_dict"][attr]["name"] }} = {{ class_dict[cls]["attr_name_dict"][attr]["name"] }}
+        self.__yang_path = "{{ class_dict[cls]["attrs"][attr]["yang_path"] }}"
+        self.__yang_path_rest_dict["{{ class_dict[cls]["attr_name_dict"][attr]["name"] }}"] = "{{ class_dict[cls]["attrs"][attr]["rest_path"] }}"
+        self.__yang_path_gnmi_dict["{{ class_dict[cls]["attr_name_dict"][attr]["name"] }}"] = "{{ class_dict[cls]["attrs"][attr]["gnmi_path"] }}"
+        {% endfor %}
+
+        {% if class_dict[cls]["children"]|length > 0 %}
+        # Dict for child lists
+        {% endif %}
+        {% for child in class_dict[cls]["children"] %}
+        self.{{ class_name_dict[child]["name"] }}_dict = OrderedDict()
+        {% endfor %}
+
+        {% if class_dict[cls]["parent"] != None %}
+        # Parent's ref
+        self.{{ class_name_dict[class_dict[cls]["parent"]]["name"] }} = {{ class_name_dict[class_dict[cls]["parent"]]["name"] }}
+        {% endif %}
+
+    {% if class_dict[cls]["keyword"] == "list" %}
+    def __hash__(self):
+        return hash(({% for key in class_dict[cls]["keys"] %}self.{{ class_dict[cls]["attr_name_dict"][key]['name'] }}{% if not loop.last %}, {% endif %}{% endfor %}))
+    {% endif %}
+
+    {% if class_dict[cls]["attrs"]|length > 0 %}
+    # Getters/Setters for attributes
+    {% endif %}
+    {% for attr in class_dict[cls]["attrs"] %}
+
+    # {{ class_dict[cls]["attr_name_dict"][attr]["name"] }}
+    @property
+    def {{ class_dict[cls]["attr_name_dict"][attr]["name"] }}(self):
+        """ {{ class_dict[cls]["attrs"][attr]["yang_path"] }}
+        {{ class_dict[cls]["attrs"][attr]["description"] }}
+        """
+        return self.__{{ class_dict[cls]["attr_name_dict"][attr]["name"] }}
+    
+    @{{ class_dict[cls]["attr_name_dict"][attr]["name"] }}.setter
+    def {{ class_dict[cls]["attr_name_dict"][attr]["name"] }}(self, {{ class_dict[cls]["attr_name_dict"][attr]["name"] }}=None):
+        """ {{ class_dict[cls]["attrs"][attr]["yang_path"] }}
+        {{ class_dict[cls]["attrs"][attr]["description"] }}
+        """        
+        self.__{{ class_dict[cls]["attr_name_dict"][attr]["name"] }} = {{ class_dict[cls]["attr_name_dict"][attr]["name"] }}        
+    {% endfor %}
+
+    {% for child in class_dict[cls]["children"] %}
+
+    def add_{{ class_name_dict[child]["name"] }}(self, {{ class_name_dict[child]["name"] }}):
+        """ Adds {{ class_name_dict[child]["name"] }}({{child}}) instance inside {{ class_name_dict[cls]["name"] }}Base ({{ class_dict[cls]["yang_path"] }})"""
+        self.{{ class_name_dict[child]["name"] }}_dict[({% for key in class_dict[child]["keys"] %}{{ class_name_dict[child]["name"] }}.{{ class_dict[child]["attr_name_dict"][key]["name"] }}{% if not loop.last %}, {% endif %}{% endfor %})] = {{ class_name_dict[child]["name"] }}
+    
+    def del_{{ class_name_dict[child]["name"] }}(self, {{ class_name_dict[child]["name"] }}):
+        """ Deletes {{ class_name_dict[child]["name"] }}({{child}}) instance from {{ class_name_dict[cls]["name"] }}Base ({{ class_dict[cls]["yang_path"] }})"""
+        del(self.{{ class_name_dict[child]["name"] }}_dict[({% for key in class_dict[child]["keys"] %}{{ class_name_dict[child]["name"] }}.{{ class_dict[child]["attr_name_dict"][key]["name"] }}{% if not loop.last %}, {% endif %}{% endfor %})])
+    {% endfor %}
+
+    def _generate_bind(self, content="all", target_attr=None, parent=None):
+        """
+        Generate pyangbindings for the spytest message
+        """
+        if content not in ["all", "config", "state"]:
+            raise ValueError("Invalid content type - {}".format(content))
+        {% if class_dict[cls]["parent"] == None %}
+        {{ class_dict[cls]["yang_name_safe"] }} = {{ class_dict[cls]["module_name_safe"] }}().{{ class_dict[cls]["yang_name_safe"] }}
+        {% else %}
+        if parent is None:
+            {{ class_dict[cls]["yang_name_safe"] }} = {{ safe_name(class_dict[cls]["node"].parent.arg) }}().{{ class_dict[cls]["yang_name_safe"] }}.add("{% for key in class_dict[cls]["keys"] %}{}{% if not loop.last %} {% endif %}{% endfor %}".format({% for key in class_dict[cls]["keys"] %}self.{{ class_dict[cls]["attr_name_dict"][key]['name'] }}{% if not loop.last %}, {% endif %}{% endfor %}))
+        else:
+            {{ class_dict[cls]["yang_name_safe"] }} = parent.{{ safe_name(class_dict[cls]["node"].parent.arg) }}.{{ class_dict[cls]["yang_name_safe"] }}.add("{% for key in class_dict[cls]["keys"] %}{}{% if not loop.last %} {% endif %}{% endfor %}".format({% for key in class_dict[cls]["keys"] %}self.{{ class_dict[cls]["attr_name_dict"][key]['name'] }}{% if not loop.last %}, {% endif %}{% endfor %}))
+        {% endif %}
+        
+        {% for attr in class_dict[cls]["attrs"] %}
+        {% if attr not in class_dict[cls]["keys"] %}
+        # {{ class_dict[cls]["attr_name_dict"][attr]["name"] }}
+        {% set parent_path_length = class_name_dict[cls]["elements_safe"] | length %}
+        {% set attr_path_length = class_dict[cls]["attr_name_dict"][attr]["elements_safe"] | length %}
+        {% set dot_path = class_dict[cls]["attr_name_dict"][attr]["elements_safe"][parent_path_length-attr_path_length:] | join(".") %}
+        if self.{{ class_dict[cls]["attr_name_dict"][attr]["name"] }} is not None:
+            if content == "{{ class_dict[cls]["attrs"][attr]["config"] }}" or content == "all":
+                {% if class_dict[cls]["attrs"][attr]["config"] == "state" %}
+                {% set dot_state = class_dict[cls]["attr_name_dict"][attr]["elements_safe"][parent_path_length-attr_path_length:-1] | join(".") %}
+                self.{{ class_dict[cls]["yang_name_safe"] }}.{{ dot_state }}._set_{{ class_dict[cls]["attr_name_dict"][attr]["elements_safe"][-1] }}(self.{{ class_dict[cls]["attr_name_dict"][attr]["name"] }})
+                {% else %}
+                self.{{ class_dict[cls]["yang_name_safe"] }}.{{ dot_path }} = self.{{ class_dict[cls]["attr_name_dict"][attr]["name"] }}
+                {% endif %}
+        if target_attr == "{{ class_dict[cls]["attr_name_dict"][attr]["name"] }}":
+            return self.{{ class_dict[cls]["yang_name_safe"] }}.{{ dot_path }}
+        {% endif %}
+        {% endfor %}
+
+        {% for child in class_dict[cls]["children"] %}
+        if content == "all" or content == "{{ class_dict[child]["config"] }}":
+            for key in self.{{ class_name_dict[child]["name"] }}_dict:
+                self.{{ class_name_dict[child]["name"] }}_dict[key]._generate_bind(content=content, parent={{ class_dict[cls]["yang_name_safe"] }})
+            {% endfor %}
+        
+        if target_attr is not None:
+            return None
+        return {{ class_dict[cls]["yang_name_safe"] }}
+    
+    {% if class_dict[cls]["keyword"] == "list" %}
+    def get_keys(self):
+        return ({% for key in class_dict[cls]["keys"] %}self.{{ class_dict[cls]["attr_name_dict"][key]['name'] }}{% if not loop.last %}, {% endif %}{% endfor %})
+    {% endif %}
+
+    def get_path(self, target_attr=None, ui="rest"):
+        {% set key_list = [] %}
+        {% if class_dict[cls]["keyword"] == "list" %}
+        {% do key_list.append("self") %}
+        {% endif %}
+        {% set current = namespace(value=cls) %}
+        {% for _ in range(1, 40) %}
+        {% if class_dict[current.value]["parent"] == None %}{% break %}
+        {% else %}
+        {% if class_dict[class_dict[current.value]["parent"]]["keyword"] == "list" %}
+        {% do key_list.append(key_list[-1] + "." + class_name_dict[class_dict[current.value]["parent"]]["name"]) %}
+        {% endif %}
+        {% set current.value = class_dict[current.value]["parent"] %}
+        {% endif %}
+        {% endfor %}
+        if target_attr is None:
+            rest_template = self.__yang_path_rest
+            gnmi_template = self.__yang_path_gnmi
+        else:
+            rest_template = self.__yang_path_rest_dict[target_attr]
+            gnmi_template = self.__yang_path_gnmi_dict[target_attr]
+
+        {% if key_list|length == 0 %}
+        if ui == "rest":
+            return rest_template
+        else:
+            return gnmi_template
+        {% else %}
+        if ui == "rest":
+            return rest_template.format({% for key in key_list|reverse %}*{{ key }}.get_keys(){% if not loop.last %}, {% endif %}{% endfor %})
+        else:
+            return gnmi_template.format({% for key in key_list|reverse %}*{{ key }}.get_keys(){% if not loop.last %}, {% endif %}{% endfor %})
+        {% endif %}
