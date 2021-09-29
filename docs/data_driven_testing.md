@@ -56,10 +56,10 @@ Describing the Spytest and the topics related to the data driven testing in gene
 The data driven testing mechanism can be achieved in SpyTest using the message classes. The message classes are generated from the YANG models.
 The message class can be imagined as a feature representation containing knobs(fields) and the APIs to configure, deconfigure and verify these knobs.
 
-Below diagram describes shows a message and its generation.
+***Below diagram describes a message and its generation.***
 ![Message class](images/message_class.svg)
 
-Below diagram describes the usage of message in the testcase.
+***Below diagram describes the usage of the message in the testcase.***
 ![Message class in testcase](images/message_class_in_testcase.svg)
 
 # 2 Requirements
@@ -69,7 +69,7 @@ Below diagram describes the usage of message in the testcase.
 1. The Message class should be auto-generated.
 2. The Message class should expose knobs and APIs for configuration, deconfiguration and verification.
 3. The Message class should fully automate the testing of REST and GNMI Northbounds
-4. The Message class should geenrate stubs for Klish.
+4. The Message class should contain stubs for Klish.
 5. The Message class should be customizable i.e. developers can add non yang fields(knobs) and custom APIs.
 6. The Custom names for messages and knobs(attributes) should be allowed.
 
@@ -88,7 +88,7 @@ Once the YANG model are parsed, it uses a custom built pyang plugin to generate 
 
 ## 3.1.2 Message
 
-Messages are python classes containing attributes which map are mapped to YANG Leaf/Leaf-list.
+Messages are python classes containing attributes which are mapped to YANG Leaf/Leaf-list.
 Along with attributes the messages also contain below Action methods
 - Configure - This method will allow the configuration of a full message or a specific attribute in a message.
 - UnConfigure - This method will allow the deconfiguration of a full message or a specific attribute in a message.
