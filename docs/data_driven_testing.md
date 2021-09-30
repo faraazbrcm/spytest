@@ -141,8 +141,8 @@ These are existing SpyTest utilties such rest_get, rest_put, compare_payloads, e
 The code generator generates the following types of classes for YANG data nodes.
 
 Two sets of classes are generated for each data node
-- Base class - These classes contain actual attributes, their setter and getter methods. These classes SHOULD NOT BE MODIFIED or INSTANTIATED inside a test case. 
-- Derived class - These classes contain stub methods for CLICK and Klish, along with operational methods such as configure, unconfigure, and verify. Developers are required to fill the stub portion of this class such as *_klish and *_click methods(). Also, Users can edit this class to add custom attributes and methods. Once the derived classes are generated, they will not be re-generated/over-written, so as to preserve the users’ edits. These are the classes users will be using in their test case for writing business logic.
+- Base class - These classes contain actual attributes, their setter and getter methods. These classes ***SHOULD NOT BE MODIFIED or INSTANTIATED inside a test case***. 
+- Derived class - These classes contain stub methods for Klish, along with operational methods such as configure, unconfigure, and verify. Developers are required to fill the stub portion of this class such as *_klish. Also, Users can edit this class to add custom attributes and methods. Once the derived classes are generated, they will not be re-generated/over-written, so as to preserve the users’ edits. ***These are the classes users will be using in their test case for writing business logic.***
 
 The default location to place the messages is shown below
 ```text
@@ -233,8 +233,8 @@ If target_path contains the path to leaf, the value will be returned. If it cont
  
 **Example**
 ```text
- aclSet.generate_bind() => Full binding for the class aclSet
- aclSet.generate_bind("configDescription") ==> return binding specific to the attribute configDescription (/acl/acl-sets/acl-set/config/description)
+ aclSet.get_bind() => Full binding for the class aclSet
+ aclSet.get_bind(target_attr="configDescription") ==> return binding specific to the attribute configDescription (/acl/acl-sets/acl-set/config/description)
 ```
 
 - get_path(ui=”rest”) will be generated, which will return a Paths in a specified UI format. 
@@ -837,6 +837,9 @@ Bala - Please fill
 
 # Developer Steps
 
+Yang models will be placed under ***brcm-spytest/apis/yang/models***
+When developer modifies the YANG contents or rebases with newer versions, they are required to regenerate Messages and Bindings using below steps. Once the Messages and Bindings are regenerated, they need to be committed along with the YANG changes.
+
 ## 5.1 Message Generation
 
 - Use **brcm-spytest/apis/yang/codegen/tools/generate_msg_class.sh** script to generate the message class
@@ -853,9 +856,13 @@ generate_msg_class.sh [--over-write-derived-class] <YANG-1> ... <YANG-N>
 brcm-spytest/apis/yang/codegen/tools/generate_msg_class.sh openconfig-acl.yang extensions/openconfig-acl-ext.yang
 ```
 
+***NOTE:*** Messages will be generated under brcm-spytest/apis/yang/codegen/messages
+
 ## 5.2 Yang Binding Generation
 
 Sachin - Please fill
+
+***NOTE:*** Bindings will be generated under brcm-spytest/apis/yang/codegen/bindings
 
 ## 5.3 Testcase Sample For Configuration
 
